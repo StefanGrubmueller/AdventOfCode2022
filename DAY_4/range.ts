@@ -12,12 +12,11 @@ module.exports = class PairRange {
 
     count: number = 0;
     inputArray: Array<string> = [];
-    elvePairs: Array<ElvePairs> = [];
 
     constructor(inputArray: Array<string>) {
         this.inputArray = inputArray;
-        this.setElvePairs();
-        this.calculateNumberOfOverlappingPairs();
+        this.setElvePairs()
+        .map(elve => this.calculateNumberOfOverlappingPairs(elve));
     }
 
     // Public
@@ -26,12 +25,13 @@ module.exports = class PairRange {
     }
 
     // Private
-    private setElvePairs() {
+    private setElvePairs(): Array<ElvePairs> {
+        let elvePairs: Array<ElvePairs> = [];
         this.inputArray.map((line: string) => {
             const [first, second] = line.split(',');
             const [firstLow, firstHigh] = first.split('-');
             const [secondLow, secondHigh] = second.split('-');
-            this.elvePairs.push({
+            elvePairs.push({
                 first: {
                     low: +firstLow,
                     high: +firstHigh,
@@ -41,20 +41,19 @@ module.exports = class PairRange {
                 }
             })
         });
+        return elvePairs;
     }
 
-    private calculateNumberOfOverlappingPairs() {
-        for(let elvePair of this.elvePairs) {
-            if ((elvePair.first.high >= elvePair.second.low
-            && elvePair.first.low <= elvePair.second.high)
-            || (elvePair.second.low >= elvePair.first.low
-            && elvePair.second.low <= elvePair.first.high)
-            || (elvePair.first.high >= elvePair.second.low
-            && elvePair.first.high <= elvePair.second.high)
-            || (elvePair.second.high >= elvePair.first.low
-            && elvePair.second.high <=elvePair.first.high)) {
-                this.count++;
-            }
+    private calculateNumberOfOverlappingPairs(elvePair: ElvePairs) {
+        if ((elvePair.first.high >= elvePair.second.low
+        && elvePair.first.low <= elvePair.second.high)
+        || (elvePair.second.low >= elvePair.first.low
+        && elvePair.second.low <= elvePair.first.high)
+        || (elvePair.first.high >= elvePair.second.low
+        && elvePair.first.high <= elvePair.second.high)
+        || (elvePair.second.high >= elvePair.first.low
+        && elvePair.second.high <=elvePair.first.high)) {
+            this.count++;
         }
     }
 }

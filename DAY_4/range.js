@@ -2,12 +2,12 @@
 exports.__esModule = true;
 module.exports = /** @class */ (function () {
     function PairRange(inputArray) {
+        var _this = this;
         this.count = 0;
         this.inputArray = [];
-        this.elvePairs = [];
         this.inputArray = inputArray;
-        this.setElvePairs();
-        this.calculateNumberOfOverlappingPairs();
+        this.setElvePairs()
+            .map(function (elve) { return _this.calculateNumberOfOverlappingPairs(elve); });
     }
     // Public
     PairRange.prototype.getCountOfOverlappingPairs = function () {
@@ -15,12 +15,12 @@ module.exports = /** @class */ (function () {
     };
     // Private
     PairRange.prototype.setElvePairs = function () {
-        var _this = this;
+        var elvePairs = [];
         this.inputArray.map(function (line) {
             var _a = line.split(','), first = _a[0], second = _a[1];
             var _b = first.split('-'), firstLow = _b[0], firstHigh = _b[1];
             var _c = second.split('-'), secondLow = _c[0], secondHigh = _c[1];
-            _this.elvePairs.push({
+            elvePairs.push({
                 first: {
                     low: +firstLow,
                     high: +firstHigh
@@ -30,20 +30,18 @@ module.exports = /** @class */ (function () {
                 }
             });
         });
+        return elvePairs;
     };
-    PairRange.prototype.calculateNumberOfOverlappingPairs = function () {
-        for (var _i = 0, _a = this.elvePairs; _i < _a.length; _i++) {
-            var elvePair = _a[_i];
-            if ((elvePair.first.high >= elvePair.second.low
-                && elvePair.first.low <= elvePair.second.high)
-                || (elvePair.second.low >= elvePair.first.low
-                    && elvePair.second.low <= elvePair.first.high)
-                || (elvePair.first.high >= elvePair.second.low
-                    && elvePair.first.high <= elvePair.second.high)
-                || (elvePair.second.high >= elvePair.first.low
-                    && elvePair.second.high <= elvePair.first.high)) {
-                this.count++;
-            }
+    PairRange.prototype.calculateNumberOfOverlappingPairs = function (elvePair) {
+        if ((elvePair.first.high >= elvePair.second.low
+            && elvePair.first.low <= elvePair.second.high)
+            || (elvePair.second.low >= elvePair.first.low
+                && elvePair.second.low <= elvePair.first.high)
+            || (elvePair.first.high >= elvePair.second.low
+                && elvePair.first.high <= elvePair.second.high)
+            || (elvePair.second.high >= elvePair.first.low
+                && elvePair.second.high <= elvePair.first.high)) {
+            this.count++;
         }
     };
     return PairRange;
